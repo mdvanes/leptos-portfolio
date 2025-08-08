@@ -47,13 +47,21 @@ pub fn BitcoinPage() -> impl IntoView {
                         match result {
                             Ok(rates_response) => {
                                 view! {
+                                    // <div>
+                                    //     <h3>"Rates:"</h3>
+                                    //     {rates_response.products.into_iter().enumerate().map(|(i, rate)| {
+                                    //         view! {
+                                    //             <p>"Rate " {i + 1} ": €" {rate.price}</p>
+                                    //         }
+                                    //     }).collect::<Vec<_>>()}
+                                    // </div>
                                     <div>
-                                        <h3>"Rates:"</h3>
-                                        {rates_response.products.into_iter().enumerate().map(|(i, rate)| {
+                                        // <h3>"First Rate:"</h3>
+                                        {rates_response.products.first().map(|rate| {
                                             view! {
-                                                <p>"Rate " {i + 1} ": €" {rate.price}</p>
+                                                <p>"1 BTC is €" {rate.price}</p>
                                             }
-                                        }).collect::<Vec<_>>()}
+                                        })}
                                     </div>
                                 }.into_any()
                             }
@@ -71,6 +79,6 @@ pub fn BitcoinPage() -> impl IntoView {
                 }}
             </Suspense>
         </div>
-        <a href="/">"Back to Home"</a>
+        // <a href="/">"Back to Home"</a>
     }
 }
