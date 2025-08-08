@@ -1,4 +1,6 @@
 use leptos::prelude::*;
+use crate::components::Header;
+
 
 /// 404 - Not Found
 #[component]
@@ -18,6 +20,7 @@ pub fn NotFound() -> impl IntoView {
     }
 
     view! {
+        <Header/>
         <h1>"Not Found"</h1>
     }
 }

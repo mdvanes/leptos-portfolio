@@ -1,5 +1,7 @@
 use leptos::prelude::*;
 
+use crate::components::Header;
+
 /// Renders the home page of your application.
 #[component]
 pub fn HomePage() -> impl IntoView {
@@ -8,11 +10,8 @@ pub fn HomePage() -> impl IntoView {
     let on_click = move |_| *count.write() += 1;
 
     view! {
+        <Header/>
         <h1>"Welcome to Leptos!"</h1>
         <button on:click=on_click>"Click Me: " {count}</button>
-        <div>
-            <a href="/bitcoin">"Go to Bitcoin Page"</a>
-            <a href="/ethereum">"Go to Ethereum Page"</a>
-        </div>
     }
 }
