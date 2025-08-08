@@ -23,6 +23,7 @@ pub fn App() -> impl IntoView {
             <main>
                 <Routes fallback=move || "Not found.">
                     <Route path=StaticSegment("") view=HomePage/>
+                    <Route path=StaticSegment("bitcoin") view=BitcoinPage/>
                     <Route path=WildcardSegment("any") view=NotFound/>
                 </Routes>
             </main>
@@ -40,6 +41,19 @@ fn HomePage() -> impl IntoView {
     view! {
         <h1>"Welcome to Leptos!"</h1>
         <button on:click=on_click>"Click Me: " {count}</button>
+        <div>
+            <a href="/bitcoin">"Go to Bitcoin Page"</a>
+        </div>
+    }
+}
+
+/// Renders the Bitcoin page
+#[component]
+fn BitcoinPage() -> impl IntoView {
+    view! {
+        <h1>"Bitcoin Page"</h1>
+        <p>"Welcome to the Bitcoin information page!"</p>
+        <a href="/">"Back to Home"</a>
     }
 }
 
