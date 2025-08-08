@@ -1,30 +1,6 @@
+use crate::api::get_rates;
 use crate::components::Header;
 use leptos::prelude::*;
-use serde::{Deserialize, Serialize};
-
-#[derive(Serialize, Deserialize, Debug, Clone)]
-pub struct Rate {
-    price: f64,
-}
-
-#[derive(Serialize, Deserialize, Debug, Clone)]
-pub struct RatesResponse {
-    products: Vec<Rate>,
-}
-
-#[server]
-pub async fn get_rates() -> Result<RatesResponse, ServerFnError> {
-    let response = reqwest::get("https://dummyjson.com/products?limit=2&select=price")
-        .await
-        .map_err(|e| ServerFnError::new(e.to_string()))?;
-
-    let rates: RatesResponse = response
-        .json()
-        .await
-        .map_err(|e| ServerFnError::new(e.to_string()))?;
-
-    Ok(rates)
-}
 
 /// Renders the Bitcoin page
 #[component]
@@ -70,7 +46,7 @@ pub fn BitcoinPage() -> impl IntoView {
                                 view! {
                                     <div>
                                         <h3>"Error:"</h3>
-                                        {vec![view! { <p style="color: red;">"Error loading rates: " {error_msg}</p> }]}
+                                        {vec![view! { <p style="color: red;">"Error loading BTC rate: " {error_msg}</p> }]}
                                     </div>
                                 }.into_any()
                             }
