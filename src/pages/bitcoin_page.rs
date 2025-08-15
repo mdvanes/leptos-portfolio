@@ -1,5 +1,6 @@
 use crate::api::{get_rates, get_balance};
 use crate::components::Header;
+use crate::utils::get_formatted_now;
 use leptos::prelude::*;
 
 /// Renders the Bitcoin page
@@ -103,11 +104,16 @@ pub fn BitcoinPage() -> impl IntoView {
             {move || {
                 add_transaction_to_balance.value().get().map(|result| {
                     match result {
-                        Ok(new_balance) => view! {
-                            <div style="margin-top: 10px; padding: 10px; background-color: #4b7f4b; border: 1px solid #4caf50;">
-                                <p>"Transaction added! New balance: €" {new_balance}</p>
-                            </div>
-                        }.into_any(),
+                        Ok(new_balance) => {
+                            // Get current date/time using utility function
+                            let time_str = get_formatted_now();
+                            
+                            view! {
+                                <div style="margin-top: 10px; padding: 10px; background-color: #4b7f4b; border: 1px solid #4caf50;">
+                                    <p>"Transaction added at " {time_str} ". New balance: €" {new_balance}</p>
+                                </div>
+                            }.into_any()
+                        },
                         Err(err) => view! {
                             <div style="margin-top: 10px; padding: 10px; background-color: #6e373f; border: 1px solid #f44336;">
                                 <p style="color: red;">"Error: " {err.to_string()}</p>
