@@ -1,5 +1,5 @@
 use crate::api::get_rates;
-use crate::components::{Balance, Header};
+use crate::components::{Balance, Header, CurrencySymbol};
 use leptos::prelude::*;
 
 /// Renders the Bitcoin page
@@ -14,6 +14,8 @@ pub fn BitcoinPage() -> impl IntoView {
             Err(_) => None,
         })
     });
+    
+    let currency_symbol = CurrencySymbol::BTC;
 
     view! {
         <Header/>
@@ -80,7 +82,7 @@ pub fn BitcoinPage() -> impl IntoView {
             </Suspense>
         </div>
 
-        <Balance rate=newRate/>
+        <Balance rate=newRate currency_symbol=currency_symbol/>
 
         // <a href="/">"Back to Home"</a>
     }

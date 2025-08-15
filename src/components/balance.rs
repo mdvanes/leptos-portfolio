@@ -2,8 +2,23 @@ use crate::api::{get_balance, AddTransactionToBalance};
 use crate::utils::get_formatted_now;
 use leptos::prelude::*;
 
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub enum CurrencySymbol {
+    BTC,
+    ETH,
+}
+
+impl CurrencySymbol {
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            CurrencySymbol::BTC => "BTC",
+            CurrencySymbol::ETH => "ETH",
+        }
+    }
+}
+
 #[component]
-pub fn Balance(rate: Memo<Option<f64>>) -> impl IntoView {
+pub fn Balance(rate: Memo<Option<f64>>, currency_symbol: CurrencySymbol) -> impl IntoView {
     // let rate1 = rate.get().map(|rate| 1.0 * rate).unwrap_or(0.0); // Default to 0.0 if rate is None
     
     let add_transaction_to_balance = ServerAction::<AddTransactionToBalance>::new();
@@ -27,7 +42,7 @@ pub fn Balance(rate: Memo<Option<f64>>) -> impl IntoView {
                                     <p style="font-size: 1.2em; font-weight: bold;">
                                         "Balance: €" {balance} " which is " 
                                         {rate.get().map(|r| balance / r).unwrap_or(0.0)} 
-                                        " BTC"
+                                        " " {currency_symbol.as_str()}
                                     </p>
                                     // <p style="font-size: 1.2em; font-weight: bold;">"Balance: €" {balance} " which is " {rate1} " BTC"</p>
                                 </div>
@@ -46,7 +61,7 @@ pub fn Balance(rate: Memo<Option<f64>>) -> impl IntoView {
         <div>
             <h2>"Add a transaction"</h2>
             <ActionForm action=add_transaction_to_balance>
-                <label for="number">"Amount deposited: € "</label>
+                <label for="number">"Amount deposited: " {currency_symbol.as_str()} " "</label>
                 <input type="number" name="number" id="number" step="0.01" required />
                 <input type="submit" value="Add" />
             </ActionForm>
