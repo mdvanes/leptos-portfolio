@@ -3,6 +3,8 @@ pub mod app;
 pub mod components;
 pub mod pages;
 pub mod utils;
+#[cfg(feature = "ssr")]
+pub mod storage;
 
 #[cfg(feature = "hydrate")]
 #[wasm_bindgen::prelude::wasm_bindgen]
