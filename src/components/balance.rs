@@ -1,8 +1,9 @@
 use crate::api::{get_balance, AddTransactionToBalance};
 use crate::utils::get_formatted_now;
 use leptos::prelude::*;
+use serde::{Serialize, Deserialize};
 
-#[derive(Debug, Clone, Copy, PartialEq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub enum CurrencySymbol {
     BTC,
     ETH,
@@ -26,7 +27,7 @@ pub fn Balance(rate: Memo<Option<f64>>, currency_symbol: CurrencySymbol) -> impl
     // Create a resource that refetches when the action completes
     let balance_resource = Resource::new(
         move || add_transaction_to_balance.version().get(),
-        |_| async move { get_balance().await },
+        move |_| async move { get_balance(currency_symbol).await },
     );
 
     view! {
@@ -61,6 +62,7 @@ pub fn Balance(rate: Memo<Option<f64>>, currency_symbol: CurrencySymbol) -> impl
         <div>
             <h2>"Add a transaction"</h2>
             <ActionForm action=add_transaction_to_balance>
+                <input type="hidden" name="currency" value={currency_symbol.as_str()} />
                 <label for="number">"Amount deposited: " {currency_symbol.as_str()} " "</label>
                 <input type="number" name="number" id="number" step="0.01" required />
                 <input type="submit" value="Add" />
