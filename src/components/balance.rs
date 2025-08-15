@@ -20,7 +20,7 @@ impl CurrencySymbol {
 #[component]
 pub fn Balance(rate: Memo<Option<f64>>, currency_symbol: CurrencySymbol) -> impl IntoView {
     // let rate1 = rate.get().map(|rate| 1.0 * rate).unwrap_or(0.0); // Default to 0.0 if rate is None
-    
+
     let add_transaction_to_balance = ServerAction::<AddTransactionToBalance>::new();
 
     // Create a resource that refetches when the action completes
@@ -40,9 +40,9 @@ pub fn Balance(rate: Memo<Option<f64>>, currency_symbol: CurrencySymbol) -> impl
                                 <div style="padding: 10px; background-color: #1a3448; border: 1px solid #4682b4; margin-bottom: 20px;">
                                     // TODO also show Balance in SYM based on current sym value
                                     <p style="font-size: 1.2em; font-weight: bold;">
-                                        "Balance: €" {balance} " which is " 
-                                        {rate.get().map(|r| balance / r).unwrap_or(0.0)} 
-                                        " " {currency_symbol.as_str()}
+                                        "Balance: " {format!("{:.9}", balance)} " " {currency_symbol.as_str()} " which is €"
+                                        {format!("{:.2}", rate.get().map(|r| balance * r).unwrap_or(0.0))}
+                                        " " 
                                     </p>
                                     // <p style="font-size: 1.2em; font-weight: bold;">"Balance: €" {balance} " which is " {rate1} " BTC"</p>
                                 </div>
