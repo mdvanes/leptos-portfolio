@@ -18,9 +18,9 @@ pub fn EthereumPage() -> impl IntoView {
                             Ok(rates_response) => {
                                 view! {
                                     <div>
-                                        {rates_response.products.get(1).map(|rate| {
+                                        {rates_response.get(1).map(|rate| {
                                             view! {
-                                                <p>"1 ETH is €" {rate.price}</p>
+                                                <p>"1 ETH is €" {*rate}</p>
                                             }
                                         })}
                                     </div>

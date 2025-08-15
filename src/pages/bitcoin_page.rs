@@ -5,12 +5,7 @@ use leptos::prelude::*;
 /// Renders the Bitcoin page
 #[component]
 pub fn BitcoinPage() -> impl IntoView {
-    let rates_resource = Resource::new(
-        || (),
-        |_| async move {
-            get_rates().await
-        },
-    );
+    let rates_resource = Resource::new(|| (), |_| async move { get_rates().await });
 
     view! {
         <Header/>
@@ -23,6 +18,7 @@ pub fn BitcoinPage() -> impl IntoView {
                         match result {
                             Ok(rates_response) => {
                                 view! {
+                                    // Example for mapping all products:
                                     // <div>
                                     //     <h3>"Rates:"</h3>
                                     //     {rates_response.products.into_iter().enumerate().map(|(i, rate)| {
@@ -31,11 +27,21 @@ pub fn BitcoinPage() -> impl IntoView {
                                     //         }
                                     //     }).collect::<Vec<_>>()}
                                     // </div>
+
+                                    // Example for showing the first product:
+                                    // <div>
+                                    //     {rates_response.products.first().map(|rate| {
+                                    //         view! {
+                                    //             <p>"1 BTC is €" {rate.price}</p>
+                                    //         }
+                                    //     })}
+                                    // </div>
+                                    
+                                    // With plain array of values:
                                     <div>
-                                        // <h3>"First Rate:"</h3>
-                                        {rates_response.products.first().map(|rate| {
+                                        {rates_response.first().map(|rate| {
                                             view! {
-                                                <p>"1 BTC is €" {rate.price}</p>
+                                                <p>"1 BTC is €" {*rate}</p>
                                             }
                                         })}
                                     </div>
