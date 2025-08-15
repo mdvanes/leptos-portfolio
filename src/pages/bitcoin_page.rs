@@ -1,4 +1,4 @@
-use crate::api::get_rates;
+use crate::api::{get_rates, get_balance};
 use crate::components::Header;
 use leptos::prelude::*;
 
@@ -7,6 +7,12 @@ use leptos::prelude::*;
 pub fn BitcoinPage() -> impl IntoView {
     let rates_resource = Resource::new(|| (), |_| async move { get_rates().await });
     let add_transaction_to_balance = ServerAction::<crate::api::AddTransactionToBalance>::new();
+    
+    // Create a resource that refetches when the action completes
+    let balance_resource = Resource::new(
+        move || add_transaction_to_balance.version().get(),
+        |_| async move { get_balance().await }
+    );
 
     view! {
         <Header/>
@@ -64,6 +70,28 @@ pub fn BitcoinPage() -> impl IntoView {
         </div>
 
         <div>
+            <h2>"Current Balance"</h2>
+            <Suspense fallback=move || view! { <p>"Loading balance..."</p> }>
+                {move || {
+                    balance_resource.get().map(|result| {
+                        match result {
+                            Ok(balance) => view! {
+                                <div style="padding: 10px; background-color: #1a3448; border: 1px solid #4682b4; margin-bottom: 20px;">
+                                    <p style="font-size: 1.2em; font-weight: bold;">"Balance: €" {balance}</p>
+                                </div>
+                            }.into_any(),
+                            Err(err) => view! {
+                                <div style="padding: 10px; background-color: #6e373f; border: 1px solid #f44336; margin-bottom: 20px;">
+                                    <p style="color: red;">"Error loading balance: " {err.to_string()}</p>
+                                </div>
+                            }.into_any(),
+                        }
+                    })
+                }}
+            </Suspense>
+        </div>
+
+        <div>
             <h2>"Add a transaction"</h2>
             <ActionForm action=add_transaction_to_balance>
                 <label for="number">"Amount deposited: € "</label>
@@ -75,9 +103,9 @@ pub fn BitcoinPage() -> impl IntoView {
             {move || {
                 add_transaction_to_balance.value().get().map(|result| {
                     match result {
-                        Ok(message) => view! {
+                        Ok(new_balance) => view! {
                             <div style="margin-top: 10px; padding: 10px; background-color: #4b7f4b; border: 1px solid #4caf50;">
-                                <p>{message}</p>
+                                <p>"Transaction added! New balance: €" {new_balance}</p>
                             </div>
                         }.into_any(),
                         Err(err) => view! {

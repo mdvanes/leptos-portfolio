@@ -1,4 +1,8 @@
 use leptos::prelude::*;
+use std::sync::Mutex;
+
+// In-memory balance storage
+static BALANCE: Mutex<f64> = Mutex::new(0.0);
 
 // Types for use with https://dummyjson.com/products?delay=500&limit=2&select=price
 // use serde::{Deserialize, Serialize};
@@ -32,5 +36,20 @@ pub async fn get_rates() -> Result<RatesResponse, ServerFnError> {
 
 #[server]
 pub async fn add_transaction_to_balance(number: f64) -> Result<f64, ServerFnError> {
-    Ok(number)
+    let mut balance = BALANCE.lock().map_err(|e| ServerFnError::new(format!("Failed to lock balance: {}", e)))?;
+    *balance += number;
+    Ok(*balance)
+}
+
+#[server]
+pub async fn get_balance() -> Result<f64, ServerFnError> {
+    let balance = BALANCE.lock().map_err(|e| ServerFnError::new(format!("Failed to lock balance: {}", e)))?;
+    Ok(*balance)
+}
+
+#[server]
+pub async fn reset_balance() -> Result<f64, ServerFnError> {
+    let mut balance = BALANCE.lock().map_err(|e| ServerFnError::new(format!("Failed to lock balance: {}", e)))?;
+    *balance = 0.0;
+    Ok(*balance)
 }
