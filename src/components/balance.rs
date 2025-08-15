@@ -78,7 +78,7 @@ pub fn Balance(rate: Memo<Option<f64>>, currency_symbol: CurrencySymbol) -> impl
 
                             view! {
                                 <div style="margin-top: 10px; padding: 10px; background-color: #4b7f4b; border: 1px solid #4caf50;">
-                                    <p>"Transaction added at " {time_str} ". New balance: €" {new_balance}</p>
+                                    <p>"Transaction added at " {time_str} ". New balance: " {new_balance} " " {currency_symbol.as_str()}</p>
                                 </div>
                             }.into_any()
                         },

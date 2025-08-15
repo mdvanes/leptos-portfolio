@@ -1,17 +1,26 @@
 use crate::api::get_rates;
-use crate::components::Header;
+use crate::components::{Balance, CurrencySymbol, Header};
 use leptos::prelude::*;
 
 #[component]
 pub fn EthereumPage() -> impl IntoView {
-    let rates_resource = Resource::new(|| (), |_| async move { get_rates().await });
+    let rates_resource = LocalResource::new(|| async move { get_rates().await });
+
+    let newRate = Memo::new(move |_| {
+        rates_resource.get().and_then(|result| match result {
+            Ok(rates_response) => rates_response.get(1).copied().map(|rate| rate / 1000.0),
+            Err(_) => None,
+        })
+    });
+
+    let currency_symbol = CurrencySymbol::ETH;
 
     view! {
         <Header/>
         <h1>"Ethereum Page"</h1>
         <p>"Welcome to the Ethereum information page!"</p>
         <div>
-            <Suspense fallback=move || view! { <p>"Loading ETH price..."</p> }>
+            <Suspense fallback=move || view! { <p>"Loading ETH rate..."</p> }>
                 {move || {
                     rates_resource.get().map(|result| {
                         match result {
@@ -20,7 +29,7 @@ pub fn EthereumPage() -> impl IntoView {
                                     <div>
                                         {rates_response.get(1).map(|rate| {
                                             view! {
-                                                <p>"1 ETH is €" {*rate}</p>
+                                                <p>"1 ETH is €" {format!("{:.2}", *rate / 1000.0)}</p>
                                             }
                                         })}
                                     </div>
@@ -39,6 +48,7 @@ pub fn EthereumPage() -> impl IntoView {
                 }}
             </Suspense>
         </div>
-        <a href="/">"Back to Home"</a>
+
+         <Balance rate=newRate currency_symbol=currency_symbol/>
     }
 }

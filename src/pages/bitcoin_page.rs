@@ -22,7 +22,7 @@ pub fn BitcoinPage() -> impl IntoView {
         <h1>"Bitcoin Page"</h1>
         <p>"Welcome to the Bitcoin information page!"</p>
         <div>
-            <Suspense fallback=move || view! { <p>"Loading prices..."</p> }>
+            <Suspense fallback=move || view! { <p>"Loading BTC rate..."</p> }>
                 {move || {
                     rates_resource.get().map(|result| {
                         match result {
@@ -84,6 +84,6 @@ pub fn BitcoinPage() -> impl IntoView {
 
         <Balance rate=newRate currency_symbol=currency_symbol/>
 
-        // <a href="/">"Back to Home"</a>
+        
     }
 }
