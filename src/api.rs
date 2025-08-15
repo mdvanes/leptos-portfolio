@@ -29,3 +29,8 @@ pub async fn get_rates() -> Result<RatesResponse, ServerFnError> {
 
     Ok(rates)
 }
+
+#[server]
+pub async fn add_transaction_to_balance(number: f64) -> Result<f64, ServerFnError> {
+    Ok(number)
+}

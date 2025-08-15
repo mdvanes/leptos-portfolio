@@ -6,6 +6,7 @@ use leptos::prelude::*;
 #[component]
 pub fn BitcoinPage() -> impl IntoView {
     let rates_resource = Resource::new(|| (), |_| async move { get_rates().await });
+    let add_transaction_to_balance = ServerAction::<crate::api::AddTransactionToBalance>::new();
 
     view! {
         <Header/>
@@ -36,7 +37,7 @@ pub fn BitcoinPage() -> impl IntoView {
                                     //         }
                                     //     })}
                                     // </div>
-                                    
+
                                     // With plain array of values:
                                     <div>
                                         {rates_response.first().map(|rate| {
@@ -61,6 +62,34 @@ pub fn BitcoinPage() -> impl IntoView {
                 }}
             </Suspense>
         </div>
+
+        <div>
+            <h2>"Add a transaction"</h2>
+            <ActionForm action=add_transaction_to_balance>
+                <label for="number">"Amount deposited: € "</label>
+                <input type="number" name="number" id="number" step="0.01" required />
+                <input type="submit" value="Add" />
+            </ActionForm>
+
+            // Display the result of the action
+            {move || {
+                add_transaction_to_balance.value().get().map(|result| {
+                    match result {
+                        Ok(message) => view! {
+                            <div style="margin-top: 10px; padding: 10px; background-color: #4b7f4b; border: 1px solid #4caf50;">
+                                <p>{message}</p>
+                            </div>
+                        }.into_any(),
+                        Err(err) => view! {
+                            <div style="margin-top: 10px; padding: 10px; background-color: #6e373f; border: 1px solid #f44336;">
+                                <p style="color: red;">"Error: " {err.to_string()}</p>
+                            </div>
+                        }.into_any(),
+                    }
+                })
+            }}
+        </div>
+
         // <a href="/">"Back to Home"</a>
     }
 }
