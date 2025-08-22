@@ -37,7 +37,10 @@ pub fn ServerTime() -> impl IntoView {
             .host()
             .unwrap();
 
-        let ws_url = format!("{p}://{h}/ws", p=protocol, h=host);
+        let ws_url = format!("{p}//{h}/ws", p=protocol, h=host);
+        
+        // Debug: log the URL being used
+        web_sys::console::log_1(&format!("Attempting WebSocket connection to: {}", ws_url).into());
 
         let ws = match WebSocket::new(&ws_url) {
             Ok(ws) => ws,
@@ -88,7 +91,7 @@ pub fn ServerTime() -> impl IntoView {
     });
 
     view! {
-        <div style="margin-top: 20px; padding: 15px; border: 1px solid #ccc; border-radius: 5px; background-color: #f9f9f9;">
+        <div style="margin-top: 20px; padding: 15px; border: 1px solid #ccc; border-radius: 5px; background-color: #2c330aff;">
             <h3>"Server Time"</h3>
             <p><strong>"Current server time: "</strong> {move || server_time.get()}</p>
             <p><small><strong>"Connection status: "</strong> {move || connection_status.get()}</small></p>
