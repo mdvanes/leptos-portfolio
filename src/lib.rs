@@ -5,6 +5,8 @@ pub mod pages;
 pub mod utils;
 #[cfg(feature = "ssr")]
 pub mod storage;
+#[cfg(feature = "ssr")]
+pub mod websocket;
 
 #[cfg(feature = "hydrate")]
 #[wasm_bindgen::prelude::wasm_bindgen]
