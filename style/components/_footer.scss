@@ -2,6 +2,7 @@
   background-color: var(--secondary-bg-color);
   padding: 1rem;
   margin-top: auto;
+  min-height: 100px;
 
   .footer-content {
     display: flex;
@@ -13,12 +14,12 @@
       display: flex;
       align-items: center;
       gap: 0.5rem;
-      color: #8c8c8c;
+      color: var(--footer-text-color);
       text-decoration: none;
       transition: color 0.2s ease;
 
       &:hover {
-        color: #61dafb;
+        color: var(--link-color);
       }
 
       .github-icon {
@@ -28,7 +29,7 @@
     }
 
     .footer-text {
-      color: #8c8c8c;
+      color: var(--footer-text-color);
       font-size: 0.9rem;
     }
   }

@@ -1,0 +1,19 @@
+.server-time {
+  display: flex;
+  justify-content: flex-end;
+
+  .server-time-content {
+    padding: 15px;
+    background-color: #21272f;
+    color: var(--footer-text-color);
+    width: 300px;
+
+    h3 {
+      margin: 0 0 10px 0;
+    }
+
+    p {
+      margin: 0;
+    }
+  }
+}

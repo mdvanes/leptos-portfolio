@@ -1,9 +1,12 @@
 @use "components/_header";
 @use "components/_footer";
+@use "components/_server-time";
 
 :root {
   --primary-bg-color: #343a40;
   --secondary-bg-color: #1b1e22;
+  --footer-text-color: #8c8c8c;
+  --link-color: #61dafb;
 }
 
 html,
@@ -28,23 +31,7 @@ main {
 }
 
 a {
-  color: #61dafb;
+  color: var(--link-color);
   text-decoration: none;
   margin: 0 1rem;
-}
-
-.server-time {
-  padding: 15px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  background-color: #2c330aff;
-  width: 300px;
-
-  h3 {
-    margin: 0 0 10px 0;
-  }
-
-  p {
-    margin: 0;
-  }
 }

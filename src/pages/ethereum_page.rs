@@ -1,5 +1,5 @@
 use crate::api::get_rates;
-use crate::components::{Balance, CurrencySymbol, Footer, Header, ServerTime};
+use crate::components::{Balance, CurrencySymbol, Footer, Header};
 use leptos::prelude::*;
 
 #[component]
@@ -51,7 +51,6 @@ pub fn EthereumPage() -> impl IntoView {
             </div>
 
             <Balance rate=newRate currency_symbol=currency_symbol/>
-            <ServerTime/>
         </main>
         <Footer/>
     }

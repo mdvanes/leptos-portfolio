@@ -84,9 +84,11 @@ pub fn ServerTime() -> impl IntoView {
 
     view! {
         <div class="server-time">
-            <h3>"Server Time"</h3>
-            <p>{move || server_time.get()}</p>
-            <p><small><strong>"Connection status: "</strong> {move || connection_status.get()}</small></p>
+            <div class="server-time-content">
+                <h3>"Server Time"</h3>
+                <p>{move || server_time.get()}</p>
+                <p><small><strong>"Connection status: "</strong> {move || connection_status.get()}</small></p>
+            </div>
         </div>
     }
 }

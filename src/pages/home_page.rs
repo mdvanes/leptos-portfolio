@@ -1,6 +1,6 @@
 use leptos::prelude::*;
 
-use crate::components::{Header, Footer, ServerTime};
+use crate::components::{Footer, Header};
 
 /// Renders the home page of your application.
 #[component]
@@ -19,6 +19,5 @@ pub fn HomePage() -> impl IntoView {
         </main>
 
         <Footer/>
-        // <ServerTime/>
     }
 }
