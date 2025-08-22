@@ -2,7 +2,7 @@ use leptos::prelude::*;
 use serde::Deserialize;
 use wasm_bindgen::prelude::*;
 use wasm_bindgen::JsCast;
-use web_sys::{WebSocket, MessageEvent, CloseEvent, ErrorEvent};
+use web_sys::{CloseEvent, ErrorEvent, MessageEvent, WebSocket};
 
 #[derive(Deserialize, Clone)]
 struct TimeMessage {
@@ -21,24 +21,16 @@ pub fn ServerTime() -> impl IntoView {
             return;
         }
 
-        let protocol = if web_sys::window()
-            .unwrap()
-            .location()
-            .protocol()
-            .unwrap() == "https:" {
+        let protocol = if web_sys::window().unwrap().location().protocol().unwrap() == "https:" {
             "wss:"
         } else {
             "ws:"
         };
-        
-        let host = web_sys::window()
-            .unwrap()
-            .location()
-            .host()
-            .unwrap();
 
-        let ws_url = format!("{p}//{h}/ws", p=protocol, h=host);
-        
+        let host = web_sys::window().unwrap().location().host().unwrap();
+
+        let ws_url = format!("{p}//{h}/ws", p = protocol, h = host);
+
         // Debug: log the URL being used
         web_sys::console::log_1(&format!("Attempting WebSocket connection to: {}", ws_url).into());
 
@@ -91,9 +83,9 @@ pub fn ServerTime() -> impl IntoView {
     });
 
     view! {
-        <div style="margin-top: 20px; padding: 15px; border: 1px solid #ccc; border-radius: 5px; background-color: #2c330aff;">
+        <div class="server-time">
             <h3>"Server Time"</h3>
-            <p><strong>"Current server time: "</strong> {move || server_time.get()}</p>
+            <p>{move || server_time.get()}</p>
             <p><small><strong>"Connection status: "</strong> {move || connection_status.get()}</small></p>
         </div>
     }
