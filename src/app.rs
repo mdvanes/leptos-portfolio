@@ -21,14 +21,14 @@ pub fn App() -> impl IntoView {
 
         // content for this welcome page
         <Router>
-            <main>
+            <div id="leptos-app">
                 <Routes fallback=move || "Not found.">
                     <Route path=StaticSegment("") view=HomePage/>
                     <Route path=StaticSegment("bitcoin") view=BitcoinPage/>
                     <Route path=StaticSegment("ethereum") view=EthereumPage/>
                     <Route path=WildcardSegment("any") view=NotFound/>
                 </Routes>
-            </main>
+            </div>
         </Router>
     }
 }

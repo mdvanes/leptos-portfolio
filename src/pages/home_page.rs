@@ -1,6 +1,6 @@
 use leptos::prelude::*;
 
-use crate::components::{Header, ServerTime};
+use crate::components::{Header, Footer, ServerTime};
 
 /// Renders the home page of your application.
 #[component]
@@ -11,9 +11,14 @@ pub fn HomePage() -> impl IntoView {
 
     view! {
         <Header/>
-        <h1>"Welcome to Leptos!"</h1>
-        <button on:click=on_click>"Click Me: " {count}</button>
-        
-        <ServerTime/>
+
+        <main>
+            <h1>"Welcome to Leptos!"</h1>
+
+            <button on:click=on_click>"Click Me: " {count}</button>
+        </main>
+
+        <Footer/>
+        // <ServerTime/>
     }
 }
