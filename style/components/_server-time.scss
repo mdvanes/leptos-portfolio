@@ -3,17 +3,56 @@
   justify-content: flex-end;
 
   .server-time-content {
-    padding: 15px;
+    align-items: center;
     background-color: #21272f;
     color: var(--footer-text-color);
-    width: 300px;
+    display: flex;
+    flex-direction: column;
+    min-width: 190px;
+    padding: 12px 24px;
+    width: auto;
 
     h3 {
       margin: 0 0 10px 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
 
     p {
       margin: 0;
+    }
+
+    .connection-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      display: inline-block;
+
+      &.connected {
+        background-color: #4caf50; // Green
+      }
+
+      &.connecting {
+        background-color: #ff9800; // Orange
+        animation: pulse 1.5s infinite;
+      }
+
+      &.disconnected {
+        background-color: #f44336; // Red
+      }
+    }
+
+    @keyframes pulse {
+      0% {
+        opacity: 1;
+      }
+      50% {
+        opacity: 0.5;
+      }
+      100% {
+        opacity: 1;
+      }
     }
   }
 }

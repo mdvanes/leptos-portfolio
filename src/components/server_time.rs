@@ -9,10 +9,18 @@ struct TimeMessage {
     server_time: String,
 }
 
+#[derive(Clone, PartialEq)]
+enum ConnectionStatus {
+    Connecting,
+    Connected,
+    Disconnected,
+    Error,
+}
+
 #[component]
 pub fn ServerTime() -> impl IntoView {
     let (server_time, set_server_time) = signal(String::from("Connecting..."));
-    let (connection_status, set_connection_status) = signal(String::from("Connecting"));
+    let (connection_status, set_connection_status) = signal(ConnectionStatus::Connecting);
 
     // Effect to handle WebSocket connection
     Effect::new(move |_| {
@@ -37,30 +45,20 @@ pub fn ServerTime() -> impl IntoView {
         let ws = match WebSocket::new(&ws_url) {
             Ok(ws) => ws,
             Err(_) => {
-                set_connection_status.set("Failed to create WebSocket".to_string());
+                set_connection_status.set(ConnectionStatus::Error);
                 return;
             }
         };
-
-        // Clone signals for closures
-        let set_server_time_clone = set_server_time.clone();
-        let set_connection_status_clone = set_connection_status.clone();
-        let set_connection_status_clone2 = set_connection_status.clone();
-        let set_connection_status_clone3 = set_connection_status.clone();
-
-        // Handle WebSocket open
-        let onopen_callback = Closure::wrap(Box::new(move |_| {
-            set_connection_status_clone.set("Connected".to_string());
-        }) as Box<dyn FnMut(JsValue)>);
-        ws.set_onopen(Some(onopen_callback.as_ref().unchecked_ref()));
-        onopen_callback.forget();
 
         // Handle WebSocket message
         let onmessage_callback = Closure::wrap(Box::new(move |e: MessageEvent| {
             if let Ok(text) = e.data().dyn_into::<js_sys::JsString>() {
                 let text_str = text.as_string().unwrap_or_default();
                 if let Ok(time_msg) = serde_json::from_str::<TimeMessage>(&text_str) {
-                    set_server_time_clone.set(time_msg.server_time);
+                    set_server_time.clone().set(time_msg.server_time);
+                    set_connection_status
+                        .clone()
+                        .set(ConnectionStatus::Connected);
                 }
             }
         }) as Box<dyn FnMut(MessageEvent)>);
@@ -69,14 +67,16 @@ pub fn ServerTime() -> impl IntoView {
 
         // Handle WebSocket close
         let onclose_callback = Closure::wrap(Box::new(move |_: CloseEvent| {
-            set_connection_status_clone2.set("Disconnected".to_string());
+            set_connection_status
+                .clone()
+                .set(ConnectionStatus::Disconnected);
         }) as Box<dyn FnMut(CloseEvent)>);
         ws.set_onclose(Some(onclose_callback.as_ref().unchecked_ref()));
         onclose_callback.forget();
 
         // Handle WebSocket error
         let onerror_callback = Closure::wrap(Box::new(move |_: ErrorEvent| {
-            set_connection_status_clone3.set("Error".to_string());
+            set_connection_status.clone().set(ConnectionStatus::Error);
         }) as Box<dyn FnMut(ErrorEvent)>);
         ws.set_onerror(Some(onerror_callback.as_ref().unchecked_ref()));
         onerror_callback.forget();
@@ -85,9 +85,17 @@ pub fn ServerTime() -> impl IntoView {
     view! {
         <div class="server-time">
             <div class="server-time-content">
-                <h3>"Server Time"</h3>
+                <h3>
+                    "Server Time"
+                    <span class={move || format!("connection-dot {}",
+                        match connection_status.get() {
+                            ConnectionStatus::Connected => "connected",
+                            ConnectionStatus::Connecting => "connecting",
+                            ConnectionStatus::Disconnected | ConnectionStatus::Error => "disconnected"
+                        }
+                    )}></span>
+                </h3>
                 <p>{move || server_time.get()}</p>
-                <p><small><strong>"Connection status: "</strong> {move || connection_status.get()}</small></p>
             </div>
         </div>
     }
